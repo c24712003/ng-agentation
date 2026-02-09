@@ -1,59 +1,80 @@
+![NgAgentation](agentation/Gemini_Generated_Image_p48c2hp48c2hp48c.png)
+
 # NgAgentation
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+Angular implementation of Agentation for visual DOM inspection and annotation. It provides an overlay-driven marker flow, component metadata extraction, and structured prompt output for page feedback.
 
-## Development server
+## Features
+- Visual overlay to mark components or DOM nodes
+- Marker list, intent editing, and clipboard export
+- Angular component metadata extraction (inputs/outputs/properties)
+- Prompt output detail levels (compact, standard, detailed, forensic)
 
-To start a local development server, run:
-
+## Installation
 ```bash
-ng serve
+npm install ng-agentation
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Quick start
+Import the module in your root module and place the agentation component once in your app.
 
-## Code scaffolding
+```ts
+// app.module.ts
+import { NgAgentationModule } from 'ng-agentation';
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+@NgModule({
+  imports: [
+    NgAgentationModule.forRoot(),
+  ],
+})
+export class AppModule {}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+```html
+<!-- app.component.html -->
+<ag-agentation></ag-agentation>
 ```
 
-## Building
+## Exported API
+### Module
+- `NgAgentationModule`
 
-To build the project run:
+### Components
+- `ag-agentation`
+- `ag-overlay`
+- `ag-toolbar`
+- `ag-markers-panel`
+- `ag-settings-panel`
+- `ag-annotation-panel`
+- `ag-inline-editor`
 
+### Services
+- `ComponentWalkerService`
+- `DataSanitizerService`
+- `PromptGeneratorService`
+- `McpService`
+
+### Models
+- `ComponentNode`, `MarkerAnnotation`, `RecordingSession`
+- `AgentationSettings`, `ToolbarState`
+- `OutputDetail`, `MarkerColor`, `DEFAULT_SETTINGS`, `MARKER_COLORS`
+
+## Build & test
 ```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+ng build ng-agentation
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+## Publishing
 ```bash
-ng e2e
+ng build ng-agentation
+cd dist/ng-agentation
+npm publish
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Compatibility
+Peer dependencies:
+- `@angular/core` and `@angular/common` >=14 <20
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## License
+MIT
