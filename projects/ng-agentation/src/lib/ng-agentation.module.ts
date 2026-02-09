@@ -10,6 +10,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SettingsPanelComponent } from './components/settings-panel/settings-panel.component';
 import { MarkersPanelComponent } from './components/markers-panel/markers-panel.component';
 import { InlineEditorComponent } from './components/inline-editor/inline-editor.component';
+import { AgentationComponent } from './components/agentation/agentation.component';
 
 // Services
 import { ComponentWalkerService } from './services/component-walker.service';
@@ -39,6 +40,7 @@ import { McpService } from './services/mcp.service';
     SettingsPanelComponent,
     MarkersPanelComponent,
     InlineEditorComponent,
+    AgentationComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { McpService } from './services/mcp.service';
     SettingsPanelComponent,
     MarkersPanelComponent,
     InlineEditorComponent,
+    AgentationComponent,
   ],
 })
 export class NgAgentationModule {

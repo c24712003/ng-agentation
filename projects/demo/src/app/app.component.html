@@ -1,4 +1,4 @@
-<div class="app-container" [class.ag-dark-mode]="settings.isDarkMode">
+<div class="app-container">
   <!-- Header -->
   <header class="app-header">
     <h1>🔍 ng-agentation Demo</h1>
@@ -104,40 +104,4 @@
 </div>
 
 <!-- ng-agentation Components -->
-
-<!-- Overlay (多選標記) -->
-<ag-overlay
-  [markers]="session.markers"
-  [settings]="settings"
-  [isRecording]="toolbarState.isRecording"
-  (markerAdded)="onMarkerAdded($event)"
-  (markerDeleted)="onDeleteMarker($event)"
-  (recordingChanged)="toolbarState.isRecording = $event"
-></ag-overlay>
-
-<!-- Toolbar (浮動工具列) -->
-<ag-toolbar
-  [session]="session"
-  [settings]="settings"
-  [state]="toolbarState"
-  (startRecording)="onStartRecording()"
-  (stopRecording)="onStopRecording()"
-  (toggleMarkers)="onToggleMarkers()"
-  (copyToClipboard)="onCopyToClipboard()"
-  (clearMarkers)="onClearMarkers()"
-  (toggleSettings)="onToggleSettings()"
-  (toggleMinimize)="onToggleMinimize()"
-  (closeToolbar)="onCloseToolbar()"
-></ag-toolbar>
-
-
-
-<!-- Markers Panel -->
-<ag-markers-panel
-  *ngIf="toolbarState.showMarkers"
-  [markers]="session.markers"
-  (deleteMarker)="onDeleteMarker($event)"
-  (updateIntent)="onUpdateIntent($event)"
-  (scrollToMarker)="onScrollToMarker($event)"
-  (closed)="toolbarState.showMarkers = false"
-></ag-markers-panel>
+<ag-agentation *ngIf="isDevMode"></ag-agentation>

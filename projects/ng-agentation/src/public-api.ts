@@ -21,3 +21,4 @@ export * from './lib/components/toolbar/toolbar.component';
 export * from './lib/components/settings-panel/settings-panel.component';
 export * from './lib/components/markers-panel/markers-panel.component';
 export * from './lib/components/inline-editor/inline-editor.component';
+export * from './lib/components/agentation/agentation.component';
