@@ -1,63 +1,80 @@
+![NgAgentation](agentation/Gemini_Generated_Image_p48c2hp48c2hp48c.png)
+
 # NgAgentation
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+Angular implementation of Agentation for visual DOM inspection and annotation. It provides an overlay-driven marker flow, component metadata extraction, and structured prompt output for page feedback.
 
-## Code scaffolding
+## Features
+- Visual overlay to mark components or DOM nodes
+- Marker list, intent editing, and clipboard export
+- Angular component metadata extraction (inputs/outputs/properties)
+- Prompt output detail levels (compact, standard, detailed, forensic)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+## Installation
 ```bash
-ng generate component component-name
+npm install ng-agentation
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Quick start
+Import the module in your root module and place the agentation component once in your app.
 
-```bash
-ng generate --help
+```ts
+// app.module.ts
+import { NgAgentationModule } from 'ng-agentation';
+
+@NgModule({
+  imports: [
+    NgAgentationModule.forRoot(),
+  ],
+})
+export class AppModule {}
 ```
 
-## Building
+```html
+<!-- app.component.html -->
+<ag-agentation></ag-agentation>
+```
 
-To build the library, run:
+## Exported API
+### Module
+- `NgAgentationModule`
 
+### Components
+- `ag-agentation`
+- `ag-overlay`
+- `ag-toolbar`
+- `ag-markers-panel`
+- `ag-settings-panel`
+- `ag-annotation-panel`
+- `ag-inline-editor`
+
+### Services
+- `ComponentWalkerService`
+- `DataSanitizerService`
+- `PromptGeneratorService`
+- `McpService`
+
+### Models
+- `ComponentNode`, `MarkerAnnotation`, `RecordingSession`
+- `AgentationSettings`, `ToolbarState`
+- `OutputDetail`, `MarkerColor`, `DEFAULT_SETTINGS`, `MARKER_COLORS`
+
+## Build & test
 ```bash
 ng build ng-agentation
-```
-
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ng-agentation
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+## Publishing
 ```bash
-ng e2e
+ng build ng-agentation
+cd dist/ng-agentation
+npm publish
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Compatibility
+Peer dependencies:
+- `@angular/core` and `@angular/common` >=14 <20
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## License
+MIT
