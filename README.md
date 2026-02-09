@@ -14,6 +14,7 @@ Angular implementation of Agentation for visual DOM inspection and annotation. I
 - Marker list, intent editing, and clipboard export
 - Angular component metadata extraction (inputs/outputs/properties)
 - Prompt output detail levels (compact, standard, detailed, forensic)
+- Nested element selection via breadcrumb navigation
 
 ## Installation
 ```bash

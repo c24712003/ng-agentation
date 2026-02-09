@@ -30,6 +30,103 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+// 祖先麵包屑導航
+.ag-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    pointer-events: auto;
+    max-width: 90vw;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+    }
+}
+
+.ag-breadcrumb-hint {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    margin-right: 4px;
+    white-space: nowrap;
+}
+
+.ag-breadcrumb-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    &.ag-breadcrumb-active {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+
+    &.ag-breadcrumb-component {
+        color: #a78bfa;
+        font-weight: 500;
+
+        &.ag-breadcrumb-active {
+            color: #fff;
+        }
+    }
+}
+
+.ag-breadcrumb-separator {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 14px;
+    user-select: none;
+}
+
+.ag-breadcrumb-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ef4444;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    line-height: 1;
+    transition: all 0.15s ease;
+    margin-left: 8px;
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: #ef4444;
+        color: #fff;
+    }
+}
+
 // 標記編號氣泡
 .ag-marker-bubble {
     display: flex;
@@ -43,10 +140,17 @@
     font-weight: 600;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
     z-index: 999997;
     transform: translate(-50%, -50%);
     animation: marker-pop 0.2s ease-out;
+    transition: transform 0.1s ease;
+
+    &:hover {
+        transform: translate(-50%, -50%) scale(1.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
 }
 
 @keyframes marker-pop {
@@ -73,6 +177,13 @@
     transform: translateX(-50%);
     z-index: 999999;
     pointer-events: none;
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .ag-recording-hint {
+        display: none !important;
+    }
 }
 
 .ag-hint-content {

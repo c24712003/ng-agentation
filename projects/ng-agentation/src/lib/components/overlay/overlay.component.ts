@@ -17,7 +17,7 @@ import {
     AgentationSettings,
     DEFAULT_SETTINGS,
 } from '../../models/component-node.interface';
-import { ComponentWalkerService } from '../../services/component-walker.service';
+import { ComponentWalkerService, AncestorBreadcrumb } from '../../services/component-walker.service';
 
 /**
  * OverlayComponent (v2)
@@ -39,6 +39,9 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
 
     /** 是否處於錄製模式 */
     @Input() isRecording = false;
+
+    /** 工具列是否最小化 */
+    @Input() isMinimized = false;
 
     /** 新增標記時觸發（多選模式） */
     @Output() markerAdded = new EventEmitter<ComponentNode>();
@@ -82,6 +85,24 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
     /** 編輯器位置 */
     editorPosition: { top: number; left: number } = { top: 0, left: 0 };
 
+    /** 祖先麵包屑列表 */
+    ancestorBreadcrumbs: AncestorBreadcrumb[] = [];
+
+    /** 麵包屑位置 */
+    breadcrumbStyle: Record<string, string> = { display: 'none' };
+
+    /** 當前選中的麵包屑索引 */
+    selectedBreadcrumbIndex = 0;
+
+    /** 是否顯示麵包屑 */
+    showBreadcrumb = false;
+
+    /** 是否鎖定當前選取（Click-to-lock） */
+    isLocked = false;
+
+    /** 鎖定的節點 */
+    lockedNode: ComponentNode | null = null;
+
     constructor(private componentWalker: ComponentWalkerService) { }
 
     ngOnInit(): void {
@@ -111,6 +132,11 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
                 this.cleanupRecording();
             }
         }
+
+        // 當工具列最小化時，隱藏所有 overlay 元素
+        if (changes['isMinimized'] && this.isMinimized) {
+            this.clearHighlight();
+        }
     }
 
     /**
@@ -139,6 +165,13 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
         this.hoveredNode = null;
         this.highlightStyle = { display: 'none' };  // 明確隱藏高亮框
         this.showTooltip = false;
+        this.showBreadcrumb = false;  // 隱藏麵包屑
+        this.ancestorBreadcrumbs = [];
+        this.showBreadcrumb = false;  // 隱藏麵包屑
+        this.ancestorBreadcrumbs = [];
+        this.selectedBreadcrumbIndex = 0;
+        this.isLocked = false;
+        this.lockedNode = null;
         document.body.style.cursor = '';
     }
 
@@ -159,6 +192,7 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
     @HostListener('document:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
         if (!this.isRecording) return;
+        if (this.isLocked) return; // 鎖定時停止更新懸停狀態
 
         let target = event.target as HTMLElement;
 
@@ -181,12 +215,16 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
             this.hoveredNode = node;
             this.updateHighlight(node, this.settings.markerColor);
             this.updateTooltip(node, event);
+            this.updateBreadcrumbs(target, event);
             this.componentHovered.emit(node);
         } else {
             this.clearHighlight();
         }
     }
 
+    /**
+     * 處理點擊（capture phase，優先攔截）
+     */
     /**
      * 處理點擊（capture phase，優先攔截）
      */
@@ -214,8 +252,56 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
         event.stopImmediatePropagation();
 
         const node = this.componentWalker.getComponentNode(target);
-        if (!node) return;
 
+        // 如果處於鎖定狀態
+        if (this.isLocked) {
+            // 如果點擊的是當前鎖定的節點（或其高亮範圍內），則確認標記
+            // 直覺上：第二次點擊 = 確認
+            if (node && this.lockedNode && this.isSameNode(node, this.lockedNode)) {
+                this.confirmMarker(this.lockedNode);
+                this.unlock();
+            } else {
+                // 點擊其他地方 -> 解鎖
+                // 如果點擊了另一個有效節點，則立即鎖定該新節點（流暢體驗）
+                this.unlock();
+                if (node) {
+                    this.lockNode(node, event);
+                }
+            }
+        } else {
+            // 未鎖定狀態 -> 第一次點擊 -> 鎖定
+            if (node) {
+                this.lockNode(node, event);
+            }
+        }
+    }
+
+    /**
+     * 鎖定節點
+     */
+    private lockNode(node: ComponentNode, event: MouseEvent): void {
+        this.isLocked = true;
+        this.lockedNode = node;
+        this.hoveredNode = node;
+        this.updateHighlight(node, this.settings.markerColor);
+        this.updateTooltip(node, event);
+        this.updateBreadcrumbs(node.domElement, event);
+        this.componentHovered.emit(node);
+    }
+
+    /**
+     * 解鎖
+     */
+    unlock(): void {
+        this.isLocked = false;
+        this.lockedNode = null;
+        this.clearHighlight();
+    }
+
+    /**
+     * 確認新增標記
+     */
+    private confirmMarker(node: ComponentNode): void {
         // 檢查是否已存在標記
         const existingMarker = this.markers.find(
             m => m.target.domElement === node.domElement
@@ -237,6 +323,13 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
             this.markerAdded.emit(node);
             this.componentSelected.emit(node);
         }
+    }
+
+    /**
+     * 比較兩個節點是否相同
+     */
+    private isSameNode(a: ComponentNode, b: ComponentNode): boolean {
+        return a.domElement === b.domElement;
     }
 
     /**
@@ -287,6 +380,26 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     /**
+     * 處理點擊標記編號
+     */
+    onMarkerClick(marker: MarkerAnnotation, event: MouseEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!this.isRecording) return;
+
+        const rect = marker.target.domElement.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+        this.editorPosition = {
+            top: rect.bottom + scrollTop + 10,
+            left: rect.left + scrollLeft
+        };
+        this.editingMarker = marker;
+    }
+
+    /**
      * 獲取標記的位置樣式
      */
     getMarkerStyle(marker: MarkerAnnotation): Record<string, string> {
@@ -314,9 +427,9 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
 
         this.highlightStyle = {
             display: 'block',
-            position: 'fixed',
-            top: `${rect.top}px`,
-            left: `${rect.left}px`,
+            position: 'absolute',
+            top: `${rect.top + window.scrollY}px`,
+            left: `${rect.left + window.scrollX}px`,
             width: `${rect.width}px`,
             height: `${rect.height}px`,
             backgroundColor: `${hex}33`,
@@ -353,8 +466,85 @@ export class OverlayComponent implements OnInit, OnDestroy, OnChanges {
     private clearHighlight(): void {
         this.highlightStyle = { display: 'none' };
         this.showTooltip = false;
+        this.showBreadcrumb = false;
         this.hoveredNode = null;
+        this.ancestorBreadcrumbs = [];
+        this.selectedBreadcrumbIndex = 0;
         this.componentHovered.emit(null);
+    }
+
+    /**
+     * 更新祖先麵包屑
+     */
+    private updateBreadcrumbs(element: HTMLElement, event: MouseEvent): void {
+        const breadcrumbs = this.componentWalker.getAncestorBreadcrumbs(element);
+
+        // 只有超過 1 個層級時才顯示麵包屑
+        if (breadcrumbs.length > 1) {
+            this.ancestorBreadcrumbs = breadcrumbs;
+            this.selectedBreadcrumbIndex = 0;
+            this.showBreadcrumb = true;
+
+            // 固定在畫面頂部中間（錄製提示下方）
+            const viewportWidth = window.innerWidth;
+
+            this.breadcrumbStyle = {
+                display: 'flex',
+                position: 'fixed',
+                top: '60px',  // 在錄製提示下方
+                left: '50%',
+                transform: 'translateX(-50%)',
+                maxWidth: `${viewportWidth - 32}px`,
+                zIndex: '999999',
+            };
+        } else {
+            this.showBreadcrumb = false;
+            this.ancestorBreadcrumbs = [];
+        }
+    }
+
+    /**
+     * 處理麵包屑項目點擊
+     */
+    onBreadcrumbClick(breadcrumb: AncestorBreadcrumb, index: number, event: MouseEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const node = this.componentWalker.getComponentNode(breadcrumb.element);
+        if (!node) return;
+
+        // 手機版優化：如果是點擊當前已選中的麵包屑 -> 確認標記
+        if (this.selectedBreadcrumbIndex === index) {
+            this.confirmMarker(node);
+            this.unlock();
+            return;
+        }
+
+        this.selectedBreadcrumbIndex = index;
+
+        // 更新鎖定狀態到新的祖先節點
+        this.isLocked = true;
+        this.lockedNode = node;
+        this.hoveredNode = node;
+        this.updateHighlight(node, this.settings.markerColor);
+        this.componentHovered.emit(node);
+    }
+
+    /**
+     * 處理麵包屑項目雙擊（選取該元素）
+     */
+    /**
+     * 處理麵包屑項目雙擊（直接選取）
+     */
+    onBreadcrumbDoubleClick(breadcrumb: AncestorBreadcrumb, event: MouseEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const node = this.componentWalker.getComponentNode(breadcrumb.element);
+        if (node) {
+            this.confirmMarker(node);
+            this.unlock();
+        }
     }
 
     /**

@@ -1,37 +1,45 @@
 <!-- 互動捕捉層 (用於處理 disabled 元素) -->
-<div class="ag-click-overlay" *ngIf="isRecording"></div>
+<div class="ag-click-overlay" *ngIf="isRecording && !isMinimized"></div>
 
 <!-- 高亮框 -->
-<div class="ag-highlight" *ngIf="isRecording && hoveredNode" [ngStyle]="highlightStyle"></div>
+<div class="ag-highlight" *ngIf="isRecording && !isMinimized && hoveredNode" [ngStyle]="highlightStyle"></div>
 
 <!-- Tooltip -->
-<div class="ag-tooltip" *ngIf="showTooltip" [ngStyle]="tooltipStyle">
+<div class="ag-tooltip" *ngIf="showTooltip && !isMinimized" [ngStyle]="tooltipStyle">
   {{ tooltipContent }}
 </div>
 
+<!-- 祖先麵包屑導航 -->
+<div class="ag-breadcrumb" *ngIf="showBreadcrumb && !isMinimized && ancestorBreadcrumbs.length > 1"
+  [ngStyle]="breadcrumbStyle">
+  <span class="ag-breadcrumb-hint">層級:</span>
+  <ng-container *ngFor="let crumb of ancestorBreadcrumbs; let i = index; let last = last">
+    <button class="ag-breadcrumb-item" [class.ag-breadcrumb-active]="i === selectedBreadcrumbIndex"
+      [class.ag-breadcrumb-component]="crumb.isComponent" (click)="onBreadcrumbClick(crumb, i, $event)"
+      (dblclick)="onBreadcrumbDoubleClick(crumb, $event)" [title]="'單擊切換 / 再次單擊確認: ' + crumb.label">
+      {{ crumb.label }}
+    </button>
+    <span class="ag-breadcrumb-separator" *ngIf="!last">›</span>
+  </ng-container>
+  <button class="ag-breadcrumb-close" (click)="unlock()" title="取消鎖定">✕</button>
+</div>
+
+
 <!-- 標記編號氣泡 -->
-<div
-  *ngFor="let marker of markers"
-  class="ag-marker-bubble"
-  [ngStyle]="getMarkerStyle(marker)"
->
+<div *ngFor="let marker of markers" class="ag-marker-bubble" [ngStyle]="getMarkerStyle(marker)"
+  (click)="onMarkerClick(marker, $event)" title="點擊編輯">
   {{ marker.index }}
 </div>
 
 <!-- 錄製狀態提示 -->
-<div class="ag-recording-hint" *ngIf="isRecording">
+<div class="ag-recording-hint" *ngIf="isRecording && !isMinimized">
   <div class="ag-hint-content">
     <span class="ag-hint-icon">🔴</span>
-    <span class="ag-hint-text">Click components to mark • <kbd>Esc</kbd> to stop</span>
+    <span class="ag-hint-text">Click to lock • Click again to mark • Use breadcrumb to select parent • <kbd>Esc</kbd> to
+      stop</span>
   </div>
 </div>
 
 <!-- 內嵌編輯器 -->
-<ag-inline-editor
-  *ngIf="editingMarker"
-  [marker]="editingMarker"
-  [position]="editorPosition"
-  (save)="onEditorSave($event)"
-  (delete)="onEditorDelete($event)"
-  (cancel)="onEditorCancel()"
-></ag-inline-editor>
+<ag-inline-editor *ngIf="editingMarker && !isMinimized" [marker]="editingMarker" [position]="editorPosition"
+  (save)="onEditorSave($event)" (delete)="onEditorDelete($event)" (cancel)="onEditorCancel()"></ag-inline-editor>

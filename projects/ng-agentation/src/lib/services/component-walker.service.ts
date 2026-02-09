@@ -423,4 +423,110 @@ export class ComponentWalkerService {
         this.uidCounter++;
         return `ag-${Date.now()}-${this.uidCounter}`;
     }
+
+    /**
+     * 獲取元素的祖先鏈（從當前元素到根）
+     * 用於層級麵包屑導航
+     *
+     * @param element - 起始 DOM 元素
+     * @param maxDepth - 最大深度（預設 10，避免過長）
+     * @returns ComponentNode 陣列，索引 0 為當前元素，依次向上
+     */
+    getAncestorChain(element: HTMLElement, maxDepth = 10): ComponentNode[] {
+        if (!this.isAvailable()) {
+            return [];
+        }
+
+        const chain: ComponentNode[] = [];
+        let current: HTMLElement | null = element;
+        let depth = 0;
+
+        while (current && current !== document.body && depth < maxDepth) {
+            const node = this.getComponentNode(current);
+            if (node) {
+                chain.push(node);
+            }
+
+            // 尋找下一個有效的父元素
+            current = current.parentElement;
+            depth++;
+        }
+
+        return chain;
+    }
+
+    /**
+     * 簡化版：僅獲取祖先元素的基本資訊（用於麵包屑顯示）
+     * 效能更佳，不需要完整的 ComponentNode
+     *
+     * @param element - 起始 DOM 元素
+     * @param maxDepth - 最大深度
+     * @returns 簡化的祖先資訊陣列
+     */
+    getAncestorBreadcrumbs(element: HTMLElement, maxDepth = 10): AncestorBreadcrumb[] {
+        if (!this.isAvailable()) {
+            return [];
+        }
+
+        const ng = (window as unknown as { ng: NgGlobal }).ng;
+        const breadcrumbs: AncestorBreadcrumb[] = [];
+        let current: HTMLElement | null = element;
+        let depth = 0;
+
+        while (current && current !== document.body && depth < maxDepth) {
+            const component = ng.getComponent(current);
+            const owningComponent = ng.getOwningComponent(current);
+
+            let label: string;
+            let isComponent = false;
+
+            if (component) {
+                // 這是一個 Angular 組件的 host 元素
+                const componentDef = this.getComponentDef(component);
+                label = this.extractSelector(componentDef);
+                isComponent = true;
+            } else if (owningComponent) {
+                // 這是組件內的普通 DOM 元素
+                const tagName = current.tagName.toLowerCase();
+                if (current.id) {
+                    label = `${tagName}#${current.id}`;
+                } else if (current.classList.length > 0) {
+                    label = `${tagName}.${current.classList[0]}`;
+                } else {
+                    label = tagName;
+                }
+            } else {
+                // 不屬於任何 Angular 組件
+                current = current.parentElement;
+                depth++;
+                continue;
+            }
+
+            breadcrumbs.push({
+                label,
+                element: current,
+                isComponent,
+                depth,
+            });
+
+            current = current.parentElement;
+            depth++;
+        }
+
+        return breadcrumbs;
+    }
+}
+
+/**
+ * 祖先麵包屑項目（輕量版）
+ */
+export interface AncestorBreadcrumb {
+    /** 顯示標籤 */
+    label: string;
+    /** 對應的 DOM 元素 */
+    element: HTMLElement;
+    /** 是否為 Angular 組件 */
+    isComponent: boolean;
+    /** 深度（0 = 當前元素） */
+    depth: number;
 }
