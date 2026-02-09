@@ -1,0 +1,53 @@
+<article class="product-card" [class.out-of-stock]="!inStock">
+  <!-- 折扣標籤 -->
+  <div class="discount-badge" *ngIf="discountPercentage">
+    -{{ discountPercentage }}%
+  </div>
+
+  <!-- 產品圖片 -->
+  <div class="product-image">
+    <img [src]="imageUrl" [alt]="name" />
+    <button class="wishlist-btn" (click)="onAddToWishlist()" title="Add to Wishlist">
+      ❤
+    </button>
+  </div>
+
+  <!-- 產品資訊 -->
+  <div class="product-info">
+    <!-- 標籤 -->
+    <div class="tags" *ngIf="tags.length > 0">
+      <span class="tag" *ngFor="let tag of tags">{{ tag }}</span>
+    </div>
+
+    <!-- 名稱 -->
+    <h3 class="product-name">{{ name }}</h3>
+
+    <!-- 評分 -->
+    <div class="rating" *ngIf="rating > 0">
+      <span class="stars">
+        <span *ngFor="let star of stars" [class.filled]="star === '★'">{{ star }}</span>
+      </span>
+      <span class="review-count">({{ reviewCount }})</span>
+    </div>
+
+    <!-- 價格 -->
+    <div class="price-section">
+      <span class="current-price">${{ price.toFixed(2) }}</span>
+      <span class="original-price" *ngIf="originalPrice">${{ originalPrice.toFixed(2) }}</span>
+    </div>
+
+    <!-- 庫存狀態 -->
+    <div class="stock-status" [class.in-stock]="inStock" [class.out]="!inStock">
+      {{ inStock ? '✓ In Stock' : '✗ Out of Stock' }}
+    </div>
+
+    <!-- 購買按鈕 -->
+    <button
+      class="add-to-cart-btn"
+      [disabled]="!inStock"
+      (click)="onAddToCart()"
+    >
+      {{ inStock ? 'Add to Cart' : 'Notify Me' }}
+    </button>
+  </div>
+</article>

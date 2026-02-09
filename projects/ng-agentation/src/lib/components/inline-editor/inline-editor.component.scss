@@ -1,0 +1,230 @@
+@use "sass:color";
+// Inline Editor Styles
+// 參考 React Agentation 的卡片式設計
+
+$bg-color: #ffffff;
+$border-color: #e2e8f0;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$primary-color: #6366f1;
+$danger-color: #ef4444;
+
+.ag-inline-editor {
+    width: 420px;
+    background: $bg-color;
+    border-radius: 12px;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.1),
+        0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// 標頭
+.ag-editor-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+}
+
+.ag-editor-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: $text-secondary;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.15s;
+
+    svg {
+        width: 14px;
+        height: 14px;
+        transform: rotate(-90deg);
+        transition: transform 0.2s ease;
+
+        &.expanded {
+            transform: rotate(0deg);
+        }
+    }
+
+    &:hover {
+        color: $text-primary;
+    }
+}
+
+// 主體
+.ag-editor-body {
+    padding: 16px 20px;
+}
+
+.ag-editor-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    color: $text-primary;
+    background: #f8fafc;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: $primary-color;
+    }
+
+    &::placeholder {
+        color: $text-secondary;
+    }
+}
+
+// 底部
+.ag-editor-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 16px;
+}
+
+.ag-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+.ag-btn-delete {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: transparent;
+    color: $danger-color;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: rgba($danger-color, 0.1);
+    }
+}
+
+.ag-btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.ag-btn-cancel {
+    background: #f1f5f9;
+    color: $text-primary;
+
+    &:hover {
+        background: #e2e8f0;
+    }
+}
+
+.ag-btn-save {
+    background: $primary-color;
+    color: white;
+
+    &:hover {
+        background: color.adjust($primary-color, $lightness: -5%);
+    }
+}
+
+// 樣式詳情區塊
+.ag-editor-styles {
+    border-top: 1px solid $border-color;
+    max-height: 250px;
+    overflow: hidden;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+
+    to {
+        max-height: 250px;
+        opacity: 1;
+    }
+}
+
+.ag-styles-header {
+    padding: 12px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f8fafc;
+}
+
+.ag-styles-list {
+    padding: 8px 20px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $border-color;
+        border-radius: 3px;
+
+        &:hover {
+            background: color.adjust($border-color, $lightness: -10%);
+        }
+    }
+}
+
+.ag-style-item {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.ag-style-key {
+    color: $text-secondary;
+    min-width: 120px;
+    flex-shrink: 0;
+}
+
+.ag-style-value {
+    color: $text-primary;
+    word-break: break-word;
+}
+
+.ag-styles-empty {
+    padding: 20px 0;
+    text-align: center;
+    color: $text-secondary;
+    font-size: 12px;
+    font-style: italic;
+}

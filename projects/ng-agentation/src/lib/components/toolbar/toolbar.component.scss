@@ -1,0 +1,252 @@
+// Toolbar Styles
+// 參考 React Agentation 的現代化設計
+
+$bg-color: #ffffff;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$primary-color: #6366f1;
+$recording-color: #ef4444;
+$disabled-color: #cbd5e1;
+$text-color: #64748b;
+
+.ag-toolbar {
+    position: fixed;
+    bottom: 24px;
+    right: 24px; // 改為右下角定位
+    z-index: 999999;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    background: $bg-color;
+    border-radius: 16px;
+    padding: 8px 12px;
+    box-shadow:
+        0 4px 6px -1px $shadow-color,
+        0 2px 4px -2px $shadow-color,
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // 錄製中時的脈動效果
+    &.recording {
+        animation: pulse-glow 2s infinite;
+    }
+
+    // 收合狀態
+    &.collapsed {
+        padding: 0;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        justify-content: center;
+
+        .ag-toolbar-buttons,
+        .ag-marker-badge {
+            display: none;
+        }
+    }
+}
+
+// 標記計數徽章
+.ag-marker-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: $primary-color;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+}
+
+// 按鈕容器
+.ag-toolbar-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+// 通用按鈕樣式
+.ag-toolbar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+
+    color: $text-color;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover:not(:disabled) {
+        background: rgba(99, 102, 241, 0.08);
+        color: $primary-color;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        color: $disabled-color;
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    &.active {
+        background: rgba(99, 102, 241, 0.12);
+        color: $primary-color;
+    }
+}
+
+// 展開按鈕（收合狀態時顯示）
+.ag-btn-expand {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+
+    &:hover:not(:disabled) {
+        background: rgba(99, 102, 241, 0.08);
+    }
+}
+
+// 收合按鈕
+.ag-btn-collapse {
+    &:hover:not(:disabled) {
+        background: rgba(99, 102, 241, 0.08);
+        color: $primary-color;
+    }
+}
+
+// 錄製按鈕特殊樣式
+.ag-btn-record {
+    &.active {
+        background: rgba(239, 68, 68, 0.12);
+        color: $recording-color;
+
+        svg {
+            animation: pulse 1s infinite;
+        }
+    }
+}
+
+// 分隔線
+.ag-toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: #e2e8f0;
+    margin: 0 4px;
+}
+
+// 動畫
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 4px 6px -1px $shadow-color,
+            0 2px 4px -2px $shadow-color,
+            0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+
+    50% {
+        box-shadow:
+            0 4px 6px -1px $shadow-color,
+            0 2px 4px -2px $shadow-color,
+            0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+// ==================== Dark Mode ====================
+:host-context(.ag-dark-mode) {
+    .ag-toolbar {
+        background: #1e293b;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.3),
+            0 2px 4px -2px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    // Default SVG color
+    .ag-toolbar-btn svg {
+        color: #94a3b8;
+    }
+
+    .ag-toolbar-btn {
+        color: #94a3b8;
+
+        &:hover:not(:disabled) {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+
+            svg {
+                color: #a5b4fc;
+            }
+        }
+
+        &.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+
+            svg {
+                color: #818cf8;
+            }
+        }
+
+        &:disabled {
+            color: #475569;
+
+            svg {
+                color: #475569;
+            }
+        }
+    }
+
+    .ag-btn-record {
+        &.active {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5; // lighter red for dark mode
+
+            svg {
+                color: #fca5a5;
+            }
+        }
+    }
+
+    .ag-toolbar-divider {
+        background: #334155;
+    }
+}

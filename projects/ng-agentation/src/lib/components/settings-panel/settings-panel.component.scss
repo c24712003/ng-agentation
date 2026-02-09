@@ -1,0 +1,341 @@
+// Settings Panel Styles
+// 參考 React Agentation 的卡片式設計
+
+$bg-color: #ffffff;
+$border-color: #e2e8f0;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$primary-color: #6366f1;
+
+.ag-settings-panel {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999998;
+
+    width: 320px;
+    background: $bg-color;
+    border-radius: 16px;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.1),
+        0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+// 標題
+.ag-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+}
+
+.ag-settings-title {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.ag-logo {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+}
+
+.ag-version {
+    font-size: 12px;
+    color: $text-secondary;
+}
+
+.ag-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        background: rgba(99, 102, 241, 0.08);
+        color: $primary-color;
+    }
+}
+
+// 通用區塊
+.ag-settings-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+// 設定行
+.ag-settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ag-settings-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: $text-primary;
+}
+
+// 幫助圖示
+.ag-help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+    border-radius: 50%;
+    cursor: help;
+}
+
+// 下拉選單
+.ag-dropdown {
+    select {
+        padding: 6px 28px 6px 12px;
+        font-size: 13px;
+        color: $text-primary;
+        background: #f8fafc;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+
+        &:focus {
+            outline: none;
+            border-color: $primary-color;
+        }
+    }
+}
+
+// Toggle 開關
+.ag-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+.ag-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    border-radius: 24px;
+    transition: 0.2s;
+
+    &::before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+}
+
+input:checked+.ag-toggle-slider {
+    background-color: $primary-color;
+
+    &::before {
+        transform: translateX(20px);
+    }
+}
+
+// 顏色選擇器
+.ag-color-picker {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.ag-color-option {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+
+    &.selected {
+        border-color: $text-primary;
+        box-shadow: 0 0 0 2px white inset;
+    }
+}
+
+// 選項區塊
+.ag-options-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+// Checkbox 行
+.ag-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: $text-primary;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: $primary-color;
+        cursor: pointer;
+    }
+}
+
+// 連結區塊
+.ag-link-section {
+    padding: 14px 20px;
+}
+
+.ag-settings-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: $text-primary;
+    text-decoration: none;
+    transition: color 0.15s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+        color: $text-secondary;
+    }
+
+    &:hover {
+        color: $primary-color;
+
+        svg {
+            color: $primary-color;
+        }
+    }
+}
+
+// ==================== Dark Mode ====================
+:host-context(.ag-dark-mode) {
+    .ag-settings-panel {
+        background: #1e293b;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .ag-settings-header {
+        border-bottom-color: #334155;
+    }
+
+    .ag-logo {
+        color: #f1f5f9;
+    }
+
+    .ag-version {
+        color: #94a3b8;
+    }
+
+    .ag-theme-toggle {
+        color: #94a3b8;
+
+        &:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+        }
+    }
+
+    .ag-settings-section {
+        border-bottom-color: #334155;
+    }
+
+    .ag-settings-label {
+        color: #f1f5f9;
+    }
+
+    .ag-help-icon {
+        color: #94a3b8;
+        border-color: #475569;
+    }
+
+    .ag-dropdown select {
+        color: #f1f5f9;
+        background: #334155;
+        border-color: #475569;
+
+        &:focus {
+            border-color: $primary-color;
+        }
+    }
+
+    .ag-toggle-slider {
+        background-color: #475569;
+    }
+
+    .ag-color-option.selected {
+        border-color: #f1f5f9;
+    }
+
+    .ag-checkbox-row {
+        color: #f1f5f9;
+    }
+
+    .ag-settings-link {
+        color: #f1f5f9;
+
+        svg {
+            color: #94a3b8;
+        }
+
+        &:hover {
+            color: #a5b4fc;
+
+            svg {
+                color: #a5b4fc;
+            }
+        }
+    }
+}

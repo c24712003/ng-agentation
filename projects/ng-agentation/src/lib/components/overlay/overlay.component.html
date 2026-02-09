@@ -1,0 +1,37 @@
+<!-- 互動捕捉層 (用於處理 disabled 元素) -->
+<div class="ag-click-overlay" *ngIf="isRecording"></div>
+
+<!-- 高亮框 -->
+<div class="ag-highlight" *ngIf="isRecording && hoveredNode" [ngStyle]="highlightStyle"></div>
+
+<!-- Tooltip -->
+<div class="ag-tooltip" *ngIf="showTooltip" [ngStyle]="tooltipStyle">
+  {{ tooltipContent }}
+</div>
+
+<!-- 標記編號氣泡 -->
+<div
+  *ngFor="let marker of markers"
+  class="ag-marker-bubble"
+  [ngStyle]="getMarkerStyle(marker)"
+>
+  {{ marker.index }}
+</div>
+
+<!-- 錄製狀態提示 -->
+<div class="ag-recording-hint" *ngIf="isRecording">
+  <div class="ag-hint-content">
+    <span class="ag-hint-icon">🔴</span>
+    <span class="ag-hint-text">Click components to mark • <kbd>Esc</kbd> to stop</span>
+  </div>
+</div>
+
+<!-- 內嵌編輯器 -->
+<ag-inline-editor
+  *ngIf="editingMarker"
+  [marker]="editingMarker"
+  [position]="editorPosition"
+  (save)="onEditorSave($event)"
+  (delete)="onEditorDelete($event)"
+  (cancel)="onEditorCancel()"
+></ag-inline-editor>
