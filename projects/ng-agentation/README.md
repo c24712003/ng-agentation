@@ -1,4 +1,4 @@
-![NgAgentation](agentation/Gemini_Generated_Image_p48c2hp48c2hp48c.png)
+![NgAgentation](../../agentation/Gemini_Generated_Image_p48c2hp48c2hp48c.png)
 
 # NgAgentation
 
