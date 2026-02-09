@@ -28,104 +28,25 @@ Set up the NgAgentation annotation toolbar in this project.
      export class AppModule {}
      ```
 
-3. **Add Component Logic**
-   - In your root component (e.g., `app.component.ts`), initialize the necessary state and event handlers.
-   - You need to manage `session`, `settings`, and `toolbarState`.
-   
-   ```typescript
-   import { Component } from '@angular/core';
-   import {
-     ComponentNode,
-     MarkerAnnotation,
-     RecordingSession,
-     AgentationSettings,
-     ToolbarState,
-     DEFAULT_SETTINGS,
-     PromptGeneratorService
-   } from 'ng-agentation';
-
-   @Component({ ... })
-   export class AppComponent {
-     // State
-     settings: AgentationSettings = { ...DEFAULT_SETTINGS };
-     toolbarState: ToolbarState = {
-       showSettings: false,
-       showMarkers: false,
-       isRecording: false,
-       isMinimized: false,
-     };
-     session: RecordingSession = {
-       id: `session-${Date.now()}`,
-       markers: [],
-       startTime: 0,
-       isRecording: false,
-     };
-
-     constructor(private promptGenerator: PromptGeneratorService) {}
-
-     // Event Handlers
-     onStartRecording() { /* ... set isRecording=true ... */ }
-     onStopRecording() { /* ... set isRecording=false ... */ }
-     onMarkerAdded(node: ComponentNode) { /* ... push to session.markers ... */ }
-     onDeleteMarker(index: number) { /* ... remove from session.markers ... */ }
-     // ... implement other handlers (see demo app for full logic)
-   }
-   ```
-
-4. **Add Template HTML**
-   - Add the following components to your `app.component.html` (or root template), outside your main router outlet:
+3. **Add Component to Template**
+   - Add the `<ag-agentation>` component to your `app.component.html` (or root template).
+   - This single component handles the toolbar, overlay, settings, and state management.
+   - Ideally, show it only in development mode.
 
    ```html
-   <!-- NgAgentation Components -->
-   
-   <!-- Overlay -->
-   <ag-overlay
-     [markers]="session.markers"
-     [settings]="settings"
-     [isRecording]="toolbarState.isRecording"
-     (markerAdded)="onMarkerAdded($event)"
-     (markerDeleted)="onDeleteMarker($event)"
-     (recordingChanged)="toolbarState.isRecording = $event"
-   ></ag-overlay>
+   <!-- Your App Content -->
+   <router-outlet></router-outlet>
 
-   <!-- Toolbar -->
-   <ag-toolbar
-     [session]="session"
-     [settings]="settings"
-     [state]="toolbarState"
-     (startRecording)="onStartRecording()"
-     (stopRecording)="onStopRecording()"
-     (toggleMarkers)="onToggleMarkers()"
-     (copyToClipboard)="onCopyToClipboard()"
-     (clearMarkers)="onClearMarkers()"
-     (toggleSettings)="onToggleSettings()"
-     (toggleMinimize)="onToggleMinimize()"
-     (closeToolbar)="onCloseToolbar()"
-   ></ag-toolbar>
-
-   <!-- Panels -->
-   <ag-settings-panel
-     *ngIf="toolbarState.showSettings"
-     [settings]="settings"
-     (settingsChange)="onSettingsChange($event)"
-     (closed)="toolbarState.showSettings = false"
-   ></ag-settings-panel>
-
-   <ag-markers-panel
-     *ngIf="toolbarState.showMarkers"
-     [markers]="session.markers"
-     (deleteMarker)="onDeleteMarker($event)"
-     (updateIntent)="onUpdateIntent($event)"
-     (scrollToMarker)="onScrollToMarker($event)"
-     (closed)="toolbarState.showMarkers = false"
-   ></ag-markers-panel>
+   <!-- NgAgentation Tool -->
+   <ag-agentation *ngIf="isDevMode"></ag-agentation>
    ```
 
-5. **Verify Setup**
+4. **Verify Setup**
    - Run the app and check if the toolbar appears.
-   - Ensure you can record and mark elements.
+   - Click the play button (▶) to start recording.
+   - Click on elements to add markers.
 
 ## Notes
 
-- This manual integration is verbose. A future version may provide a single `<ng-agentation>` wrapper component.
+- The `<ag-agentation>` component encapsulates all state logic (recording, markers, settings).
 - Ensure Styles are imported if not automatically included by the library build.
