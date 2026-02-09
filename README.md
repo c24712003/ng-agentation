@@ -2,6 +2,9 @@
 
 # NgAgentation
 
+[![npm version](https://img.shields.io/npm/v/ng-agentation.svg)](https://www.npmjs.com/package/ng-agentation)
+[![npm downloads](https://img.shields.io/npm/dm/ng-agentation.svg)](https://www.npmjs.com/package/ng-agentation)
+
 Angular implementation of Agentation for visual DOM inspection and annotation. It provides an overlay-driven marker flow, component metadata extraction, and structured prompt output for page feedback.
 
 ## Features
