@@ -6,6 +6,7 @@ import {
     MARKER_COLORS,
     OutputDetail,
 } from '../../models/component-node.interface';
+import { McpService } from '../../services/mcp.service';
 
 /**
  * SettingsPanelComponent
@@ -33,6 +34,16 @@ export class SettingsPanelComponent {
 
     /** 設定變更時觸發 */
     @Output() settingsChange = new EventEmitter<AgentationSettings>();
+
+    mcpStatus$;
+
+    constructor(private mcpService: McpService) {
+        this.mcpStatus$ = this.mcpService.status$;
+    }
+
+    connectMcp() {
+        this.mcpService.connect();
+    }
 
     /** 可用顏色列表 */
     readonly colors: MarkerColor[] = ['purple', 'blue', 'cyan', 'green', 'yellow', 'orange', 'red'];

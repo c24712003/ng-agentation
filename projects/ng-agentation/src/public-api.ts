@@ -12,6 +12,7 @@ export * from './lib/models/component-node.interface';
 export * from './lib/services/component-walker.service';
 export * from './lib/services/data-sanitizer.service';
 export * from './lib/services/prompt-generator.service';
+export * from './lib/services/mcp.service';
 
 // Components
 export * from './lib/components/overlay/overlay.component';

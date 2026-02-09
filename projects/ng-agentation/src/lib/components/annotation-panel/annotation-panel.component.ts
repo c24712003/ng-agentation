@@ -7,6 +7,8 @@ import { PromptGeneratorService } from '../../services/prompt-generator.service'
  *
  * 標註面板：顯示選中組件的詳細資訊，並提供使用者輸入意圖的介面
  */
+import { McpService } from '../../services/mcp.service';
+
 @Component({
     selector: 'ag-annotation-panel',
     standalone: false,
@@ -26,6 +28,9 @@ export class AnnotationPanelComponent {
     /** 是否已複製到剪貼板 */
     copied = false;
 
+    /** 是否已發送到 MCP */
+    sent = false;
+
     /** 展開的區塊 */
     expandedSections = {
         inputs: true,
@@ -34,7 +39,36 @@ export class AnnotationPanelComponent {
         styles: false,
     };
 
-    constructor(private promptGenerator: PromptGeneratorService) { }
+    mcpStatus$;
+
+    constructor(
+        private promptGenerator: PromptGeneratorService,
+        private mcpService: McpService
+    ) {
+        this.mcpStatus$ = this.mcpService.status$;
+    }
+
+    /**
+     * 發送標註給 Agent (MCP)
+     */
+    async sendToAgent(): Promise<void> {
+        if (!this.selectedNode) return;
+
+        const annotation: UserAnnotation = {
+            target: this.selectedNode,
+            intent: this.userIntent || '(No specific intent provided)',
+            timestamp: Date.now(),
+        };
+
+        try {
+            await this.mcpService.sendAnnotation(annotation);
+            this.sent = true;
+            setTimeout(() => (this.sent = false), 2000);
+        } catch (err) {
+            console.error('[ng-agentation] Failed to send annotation:', err);
+            // TODO: Error feedback to user
+        }
+    }
 
     /**
      * 複製 Markdown 到剪貼板

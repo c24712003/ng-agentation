@@ -113,6 +113,17 @@
 
   <!-- 操作按鈕 -->
   <footer class="ag-panel-footer">
+    <!-- MCP Send Button -->
+    <button
+      *ngIf="(mcpStatus$ | async)?.connected"
+      class="ag-button ag-button-primary ag-mcp-button"
+      (click)="sendToAgent()"
+      [class.ag-button-success]="sent"
+    >
+      <span *ngIf="!sent">🤖 Send to Agent</span>
+      <span *ngIf="sent">✅ Sent!</span>
+    </button>
+
     <button
       class="ag-button ag-button-primary"
       (click)="copyToClipboard()"

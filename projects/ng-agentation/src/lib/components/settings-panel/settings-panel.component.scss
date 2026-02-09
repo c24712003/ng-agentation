@@ -1,3 +1,4 @@
+@use "sass:color";
 // Settings Panel Styles
 // 參考 React Agentation 的卡片式設計
 
@@ -338,4 +339,87 @@ input:checked+.ag-toggle-slider {
             }
         }
     }
+
+    // MCP Status Dark Mode Overrides
+    .ag-status-indicator {
+        background: #334155;
+        color: #94a3b8;
+
+        .ag-status-dot {
+            background-color: #64748b;
+        }
+
+        &.connected {
+            background: #064e3b;
+            color: #34d399;
+
+            .ag-status-dot {
+                background-color: #34d399;
+                box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+            }
+        }
+    }
+
+    .ag-btn-small {
+        background: $primary-color;
+
+        &:hover {
+            background: color.adjust($primary-color, $lightness: 5%);
+        }
+    }
+}
+
+
+
+// MCP Status
+.ag-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: $text-secondary;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f1f5f9;
+
+    .ag-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #cbd5e1;
+        transition: background-color 0.3s;
+    }
+
+    &.connected {
+        color: #059669;
+        background: #ecfdf5;
+
+        .ag-status-dot {
+            background-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+    }
+}
+
+.ag-btn-small {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    background: $primary-color;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+        background: color.adjust($primary-color, $lightness: -5%);
+    }
+}
+
+.ag-error-text {
+    color: #ef4444;
+    font-size: 11px;
+    margin-top: 4px;
 }

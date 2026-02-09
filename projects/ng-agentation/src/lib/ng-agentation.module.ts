@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 // Components
 import { OverlayComponent } from './components/overlay/overlay.component';
@@ -14,6 +15,7 @@ import { InlineEditorComponent } from './components/inline-editor/inline-editor.
 import { ComponentWalkerService } from './services/component-walker.service';
 import { DataSanitizerService } from './services/data-sanitizer.service';
 import { PromptGeneratorService } from './services/prompt-generator.service';
+import { McpService } from './services/mcp.service';
 
 /**
  * NgAgentationModule
@@ -41,6 +43,7 @@ import { PromptGeneratorService } from './services/prompt-generator.service';
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule,
   ],
   exports: [
     OverlayComponent,
@@ -62,6 +65,7 @@ export class NgAgentationModule {
         ComponentWalkerService,
         DataSanitizerService,
         PromptGeneratorService,
+        McpService,
       ],
     };
   }
