@@ -130,13 +130,7 @@
   (closeToolbar)="onCloseToolbar()"
 ></ag-toolbar>
 
-<!-- Settings Panel -->
-<ag-settings-panel
-  *ngIf="toolbarState.showSettings"
-  [settings]="settings"
-  (settingsChange)="onSettingsChange($event)"
-  (closed)="toolbarState.showSettings = false"
-></ag-settings-panel>
+
 
 <!-- Markers Panel -->
 <ag-markers-panel

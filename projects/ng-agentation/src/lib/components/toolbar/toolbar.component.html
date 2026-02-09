@@ -110,4 +110,12 @@
       </button>
     </div>
   </ng-container>
+
+  <!-- Settings Panel -->
+  <ag-settings-panel
+    *ngIf="state.showSettings"
+    [settings]="settings"
+    (settingsChange)="settingsChange.emit($event)"
+    (closed)="onToggleSettings()"
+  ></ag-settings-panel>
 </div>
