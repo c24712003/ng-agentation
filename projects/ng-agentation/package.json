@@ -1,9 +1,17 @@
 {
   "name": "ng-agentation",
   "version": "0.0.1",
+  "description": "Angular implementation of Agentation",
+  "author": "Andy Chou",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "agentation",
+    "annotation"
+  ],
   "peerDependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0"
+    "@angular/common": ">=14.0.0 <20.0.0",
+    "@angular/core": ">=14.0.0 <20.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
